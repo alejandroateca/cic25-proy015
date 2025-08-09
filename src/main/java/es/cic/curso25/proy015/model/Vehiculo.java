@@ -1,5 +1,7 @@
 package es.cic.curso25.proy015.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,14 +16,15 @@ public class Vehiculo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String matricula;
 
-    @Column(nullable = false)
+    @Column
     private String tipo;
 
     @ManyToOne
     @JoinColumn(name = "plaza_asignada_id", nullable = false)
+    @JsonBackReference
     private Plaza plazaAsignada;
 
     public Long getId() {

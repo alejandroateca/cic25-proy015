@@ -1,6 +1,9 @@
 package es.cic.curso25.proy015.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Plaza {
@@ -19,10 +24,15 @@ public class Plaza {
     private boolean disponible; // habilitada o no
 
     @OneToMany(mappedBy = "plazaAsignada")
-    private List<Vehiculo> vehiculosAutorizados;
+    @Valid
+    @JsonManagedReference
+    @NotNull(message = "La lista de vehículos autorizados no puede ser nula")
+    private List<Vehiculo> vehiculosAutorizados = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "vehiculo_actual_id")
+    @Valid
+    @JsonManagedReference
     private Vehiculo vehiculoActual; // null si está libre
 
     public Long getId() {
@@ -56,6 +66,4 @@ public class Plaza {
     public void setVehiculoActual(Vehiculo vehiculoActual) {
         this.vehiculoActual = vehiculoActual;
     }
-
-    
 }

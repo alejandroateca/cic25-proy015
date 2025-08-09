@@ -10,7 +10,7 @@ import es.cic.curso25.proy015.model.Vehiculo;
 import es.cic.curso25.proy015.service.VehiculoService;
 
 @RestController
-@RequestMapping("/api/vehiculos")
+@RequestMapping("/vehiculos")
 public class VehiculoController {
 
     @Autowired

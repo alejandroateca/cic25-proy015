@@ -37,7 +37,7 @@ public class VehiculoService {
         return vehiculo;
     }
 
-    public Vehiculo create(Vehiculo vehiculo) {
+    public Vehiculo createVehiculo(Vehiculo vehiculo) {
         logger.info("Creando vehículo para plaza asignada id {}", vehiculo.getPlazaAsignada() != null ? vehiculo.getPlazaAsignada().getId() : null);
 
         Plaza plaza = vehiculo.getPlazaAsignada();

@@ -18,12 +18,12 @@ public class MultaController {
     private MultaService multaService;
 
     @GetMapping
-    public List<Multa> listarTodas() {
+    public List<Multa> getAllMultas() {
         return multaService.getAllMultas();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Multa> obtenerPorId(@PathVariable Long id) {
+    public ResponseEntity<Multa> getMulta(@PathVariable Long id) {
         Multa multa = multaService.getMulta(id);
         if (multa == null) {
             throw new IdNotFoundException(id);
@@ -32,13 +32,13 @@ public class MultaController {
     }
 
     @PostMapping
-    public ResponseEntity<Multa> crearMulta(@RequestBody Multa multa) {
+    public ResponseEntity<Multa> createMulta(@RequestBody Multa multa) {
         Multa creada = multaService.createMulta(multa);
         return ResponseEntity.ok(creada);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Multa> actualizarMulta(@PathVariable Long id, @RequestBody Multa multa) {
+    public ResponseEntity<Multa> updaterMulta(@PathVariable Long id, @RequestBody Multa multa) {
         if (!id.equals(multa.getId())) {
             throw new IllegalArgumentException("El ID en la URL y el cuerpo no coinciden");
         }
@@ -47,7 +47,7 @@ public class MultaController {
     }
 
     @PutMapping("/{id}/calcularImporte")
-    public ResponseEntity<Multa> calcularImporteFinal(@PathVariable Long id, @RequestBody Multa multa) {
+    public ResponseEntity<Multa> calcularYGuardarImporteFinal(@PathVariable Long id, @RequestBody Multa multa) {
         if (!id.equals(multa.getId())) {
             throw new IllegalArgumentException("El ID en la URL y el cuerpo no coinciden");
         }
@@ -56,7 +56,7 @@ public class MultaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> borrarMulta(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMulta(@PathVariable Long id) {
         multaService.deleteMulta(id);
         return ResponseEntity.ok().build();
     }

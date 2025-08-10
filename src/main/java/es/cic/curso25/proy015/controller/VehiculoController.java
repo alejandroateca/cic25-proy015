@@ -17,24 +17,24 @@ public class VehiculoController {
     private VehiculoService vehiculoService;
 
     @GetMapping
-    public List<Vehiculo> listarTodos() {
+    public List<Vehiculo> getAllVehiculos() {
         return vehiculoService.getAllVehiculos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vehiculo> obtenerPorId(@PathVariable Long id) {
+    public ResponseEntity<Vehiculo> getVehiculo(@PathVariable Long id) {
         Vehiculo vehiculo = vehiculoService.getVehiculo(id);
         return ResponseEntity.ok(vehiculo);
     }
 
     @PostMapping
-    public ResponseEntity<Vehiculo> crearVehiculo(@RequestBody Vehiculo vehiculo) {
-        Vehiculo creado = vehiculoService.create(vehiculo);
+    public ResponseEntity<Vehiculo> createVehiculo(@RequestBody Vehiculo vehiculo) {
+        Vehiculo creado = vehiculoService.createVehiculo(vehiculo);
         return ResponseEntity.ok(creado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Vehiculo> actualizarVehiculo(@PathVariable Long id, @RequestBody Vehiculo vehiculo) {
+    public ResponseEntity<Vehiculo> updateVehiculo(@PathVariable Long id, @RequestBody Vehiculo vehiculo) {
         if (!id.equals(vehiculo.getId())) {
             throw new IllegalArgumentException("El ID en la URL y el cuerpo no coinciden");
         }
@@ -43,7 +43,7 @@ public class VehiculoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> borrarVehiculo(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteVehiculo(@PathVariable Long id) {
         vehiculoService.deleteVehiculo(id);
         return ResponseEntity.ok().build();
     }

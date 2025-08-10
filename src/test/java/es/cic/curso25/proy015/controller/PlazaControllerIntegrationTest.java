@@ -44,8 +44,8 @@ public class PlazaControllerIntegrationTest {
     void getAllPlazasTest() throws Exception {
         mockMvc.perform(get("/plazas")
                 .with(httpBasic("user", "password")))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
@@ -56,8 +56,8 @@ public class PlazaControllerIntegrationTest {
 
         mockMvc.perform(get("/plazas/" + plaza.getId())
                 .with(httpBasic("user", "password")))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
@@ -73,11 +73,11 @@ public class PlazaControllerIntegrationTest {
                 .with(httpBasic("user", "password"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-            .andExpect(status().isOk())
-            .andExpect(result -> {
-                Plaza actualizada = objectMapper.readValue(result.getResponse().getContentAsString(), Plaza.class);
-                assertTrue(!actualizada.isDisponible());
-            });
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    Plaza actualizada = objectMapper.readValue(result.getResponse().getContentAsString(), Plaza.class);
+                    assertTrue(!actualizada.isDisponible());
+                });
     }
 
     @Test
@@ -89,58 +89,56 @@ public class PlazaControllerIntegrationTest {
 
         mockMvc.perform(put("/plazas/" + plaza.getId() + "/deshabilitar")
                 .with(httpBasic("user", "password")))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
         Optional<Plaza> actualizada = plazaRepository.findById(plaza.getId());
         assertTrue(actualizada.isPresent() && !actualizada.get().isDisponible());
     }
 
-   @Test
+    @Test
     void aparcarVehiculoTest() throws Exception {
-    Plaza plaza = new Plaza();
-    plaza.setDisponible(true);
-    plaza.setVehiculosAutorizados(new ArrayList<>()); // inicializa lista para evitar errores de validación
-    plaza = plazaRepository.save(plaza);
+        Plaza plaza = new Plaza();
+        plaza.setDisponible(true);
+        plaza.setVehiculosAutorizados(new ArrayList<>()); // inicializa lista para evitar errores de validación
+        plaza = plazaRepository.save(plaza);
 
-    Vehiculo vehiculo = new Vehiculo();
-    // No sets id manualmente
-    vehiculo.setPlazaAsignada(plaza);
-    vehiculo = vehiculoRepository.save(vehiculo); // guarda vehículo para que exista en BD
+        Vehiculo vehiculo = new Vehiculo();
+        vehiculo.setPlazaAsignada(plaza);
+        vehiculo = vehiculoRepository.save(vehiculo);
 
-    String json = objectMapper.writeValueAsString(vehiculo);
+        String json = objectMapper.writeValueAsString(vehiculo);
 
-    mockMvc.perform(put("/plazas/" + plaza.getId() + "/aparcar")
-            .with(httpBasic("user", "password"))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-        .andExpect(status().isOk())
-        .andExpect(result -> {
-            Plaza actualizada = objectMapper.readValue(result.getResponse().getContentAsString(), Plaza.class);
-            assertTrue(actualizada.getVehiculoActual() != null);
-        });
-}
+        mockMvc.perform(put("/plazas/" + plaza.getId() + "/aparcar")
+                .with(httpBasic("user", "password"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    Plaza actualizada = objectMapper.readValue(result.getResponse().getContentAsString(), Plaza.class);
+                    assertTrue(actualizada.getVehiculoActual() != null);
+                });
+    }
 
-   @Test
-void quitarVehiculoTest() throws Exception {
-    Plaza plaza = new Plaza();
-    plaza.setDisponible(true);
-    plaza = plazaRepository.save(plaza);  // guardamos la plaza primero
+    @Test
+    void quitarVehiculoTest() throws Exception {
+        Plaza plaza = new Plaza();
+        plaza.setDisponible(true);
+        plaza = plazaRepository.save(plaza); // guardamos la plaza primero
 
-    Vehiculo vehiculo = new Vehiculo();
-    vehiculo.setPlazaAsignada(plaza);  // asignamos plaza al vehículo
-    vehiculo = vehiculoRepository.save(vehiculo); // guardamos vehículo
+        Vehiculo vehiculo = new Vehiculo();
+        vehiculo.setPlazaAsignada(plaza);
+        vehiculo = vehiculoRepository.save(vehiculo);
 
-    plaza.setVehiculoActual(vehiculo);
-    plaza = plazaRepository.save(plaza); // guardamos plaza con vehículo asignado
+        plaza.setVehiculoActual(vehiculo);
+        plaza = plazaRepository.save(plaza);
 
-    mockMvc.perform(put("/plazas/" + plaza.getId() + "/quitarVehiculo")
-            .with(httpBasic("user", "password")))
-        .andExpect(status().isOk())
-        .andExpect(result -> {
-            Plaza actualizada = objectMapper.readValue(result.getResponse().getContentAsString(), Plaza.class);
-            assertNull(actualizada.getVehiculoActual());
-        });
-}
-
+        mockMvc.perform(put("/plazas/" + plaza.getId() + "/quitarVehiculo")
+                .with(httpBasic("user", "password")))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    Plaza actualizada = objectMapper.readValue(result.getResponse().getContentAsString(), Plaza.class);
+                    assertNull(actualizada.getVehiculoActual());
+                });
+    }
 
 }
